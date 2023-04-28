@@ -1,12 +1,32 @@
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import pages.HomePage;
+import pages.LoginPage;
 import pages.SignupLoginPage;
 import pages.SignupPage;
+import resources.JSONReader;
 
-import java.time.Duration;
+import java.lang.reflect.Method;
 
-public class TC01_UserRegistrationTest extends testBase{
+public class TC01_UserRegistrationTest extends TestBase{
 
+    public static String email;
+    public static String password;
+
+    @BeforeMethod
+    public void setup(Method method)
+    {
+        email = JSONReader.readJSON(getTestClassName(),method.getName(),"email");
+        password = JSONReader.readJSON(getTestClassName(),method.getName(),"password");
+    }
+    @Test
+    public void verifySignInSuccessfully()
+    {
+        new LoginPage(driver)
+                .signInAction(email , password)
+                .verifySuccessfulLogin();
+    }
     @Test
     public void verifyThatUserCanRegisterSuccessfully() {
 
@@ -22,12 +42,13 @@ public class TC01_UserRegistrationTest extends testBase{
                 .signUpActions()
                 .assertThatAccountCreatedSuccessfully()
                 .clickOnContinueButton();
-               // .clickOnCloseAd()
-               // .clickOnContinueButton()
+        // .clickOnCloseAd()
+        // .clickOnContinueButton()
 
         new HomePage(driver)
                 .clickOnDeleteButton()
                 .assertThatAccountDeletedSuccessfully();
+
     }
 
 

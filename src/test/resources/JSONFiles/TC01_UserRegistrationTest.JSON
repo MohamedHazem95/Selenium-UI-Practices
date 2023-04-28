@@ -1,0 +1,8 @@
+[
+  {
+    "verifySignInSuccessfully": {
+      "email" : "SeleniumTEST@gmail.com",
+      "password" : "SeleniumTEST"
+    }
+  }
+]
