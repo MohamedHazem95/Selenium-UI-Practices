@@ -6,9 +6,8 @@ import org.testng.annotations.BeforeTest;
 
 import java.time.Duration;
 
-public class testBase {
-     static WebDriver driver;
-
+public class TestBase {
+    public static WebDriver driver;
     @BeforeTest
     public void startBrowser() {
         WebDriverManager.chromedriver().setup();
@@ -22,4 +21,11 @@ public class testBase {
     public void tearDown() {
         driver.quit();
     }
+
+    public String getTestClassName()
+    {
+        return this.getClass().getSimpleName();
+    }
+
+
 }
