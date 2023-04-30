@@ -1,5 +1,8 @@
+package Tests;
+
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.Description;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import pages.HomePage;
 import pages.LoginPage;
@@ -8,6 +11,8 @@ import pages.SignupPage;
 import resources.JSONReader;
 
 import java.lang.reflect.Method;
+import io.qameta.allure.selenide.AllureSelenide;
+
 
 public class TC01_UserRegistrationTest extends TestBase{
 
@@ -19,8 +24,10 @@ public class TC01_UserRegistrationTest extends TestBase{
     {
         email = JSONReader.readJSON(getTestClassName(),method.getName(),"email");
         password = JSONReader.readJSON(getTestClassName(),method.getName(),"password");
+        SelenideLogger.addListener("AllureSelenide", new AllureSelenide().screenshots(true).savePageSource(false));
     }
     @Test
+    @Description("Verify that user can login successfully")
     public void verifySignInSuccessfully()
     {
         new LoginPage(driver)
