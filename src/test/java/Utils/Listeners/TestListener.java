@@ -3,103 +3,59 @@ package Utils.Listeners;
 import static Utils.ExtentReports.ExtentManager.getExtentReports;
 import static Utils.ExtentReports.ExtentTestManager.getTest;
 
+import Utils.ExtentReports.ExtentManager;
 import Utils.ExtentReports.ExtentTestManager;
 import com.aventstack.extentreports.Status;
 import io.qameta.allure.Attachment;
 import java.util.Objects;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 import Tests.TestBase;
-import Utils.logs.Log;
 
 public class TestListener extends TestBase implements ITestListener {
-    private static String getTestMethodName(ITestResult iTestResult) {
-        return iTestResult.getMethod().getConstructorOrMethod().getName();
+    public void onStart(ITestContext context) {
+        System.out.println("*** Test Suite " + context.getName() + " started ***");
     }
 
-    //Text attachments for Allure
-    @Attachment(value = "Page screenshot", type = "image/png")
-    public byte[] saveScreenshotPNG(WebDriver driver) {
-        return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+    public void onFinish(ITestContext context) {
+        System.out.println(("*** Test Suite " + context.getName() + " ending ***"));
+        ExtentManager.getExtentReports().flush();
     }
 
-    //Text attachments for Allure
-    @Attachment(value = "{0}", type = "text/plain")
-    public static String saveTextLog(String message) {
-        return message;
+    public void onTestStart(ITestResult result) {
+        System.out.println(("*** Running test method " + result.getMethod().getMethodName() + "..."));
+        ExtentTestManager.startTest(result.getMethod().getMethodName());
     }
 
-    //HTML attachments for Allure
-    @Attachment(value = "{0}", type = "text/html")
-    public static String attachHtml(String html) {
-        return html;
-    }
-
-    @Override
-    public void onStart(ITestContext iTestContext) {
-        Log.info("I am in onStart method " + iTestContext.getName());
-        iTestContext.setAttribute("WebDriver", this.driver);
-    }
-
-    @Override
-    public void onFinish(ITestContext iTestContext) {
-        Log.info("I am in onFinish method " + iTestContext.getName());
-        //Do tier down operations for ExtentReports reporting!
-        getExtentReports().flush();
-    }
-
-    @Override
-    public void onTestStart(ITestResult iTestResult) {
-        Log.info(getTestMethodName(iTestResult) + " test is starting.");
-        ExtentTestManager.startTest(iTestResult.getMethod().getMethodName());
-    }
-
-    @Override
-    public void onTestSuccess(ITestResult iTestResult) {
-        Log.info(getTestMethodName(iTestResult) + " test is succeed.");
-        //ExtentReports log operation for passed tests.
+    public void onTestSuccess(ITestResult result) {
+        System.out.println("*** Executed " + result.getMethod().getMethodName() + " test successfully...");
         ExtentTestManager.getTest().log(Status.PASS, "Test passed");
     }
 
-    @Override
-    public void onTestFailure(ITestResult iTestResult) {
-        Log.info(getTestMethodName(iTestResult) + " test is failed.");
+    public void onTestFailure(ITestResult result){
 
-        //Get driver from BaseTest and assign to local webdriver variable.
-        Object testClass = iTestResult.getInstance();
-
-
-        //Allure ScreenShotRobot and SaveTestLog
-        if (driver != null) {
-            System.out.println("Screenshot captured for test case:" + getTestMethodName(iTestResult));
-            saveScreenshotPNG(driver);
-        }
-
-        //Save a log on allure.
-        saveTextLog(getTestMethodName(iTestResult) + " failed and screenshot taken!");
-
-        //Take base64Screenshot screenshot for extent reports
-        String base64Screenshot =
-                "data:image/png;base64," + ((TakesScreenshot) Objects.requireNonNull(driver)).getScreenshotAs(OutputType.BASE64);
-
-        //ExtentReports log and screenshot operations for failed tests.
-        getTest().log(Status.FAIL, "Test Failed",
-                getTest().addScreenCaptureFromBase64String(base64Screenshot).getModel().getMedia().get(0));
+            System.out.println("*** Test execution " + result.getMethod().getMethodName() + " failed...");
+            ExtentTestManager.getTest().log(Status.FAIL, "Test Failed");
     }
 
-    @Override
-    public void onTestSkipped(ITestResult iTestResult) {
-        Log.info(getTestMethodName(iTestResult) + " test is skipped.");
-        //ExtentReports log operation for skipped tests.
-        getTest().log(Status.SKIP, "Test Skipped");
+    public void onTestSkipped(ITestResult result) {
+        System.out.println("*** Test " + result.getMethod().getMethodName() + " skipped...");
+        ExtentTestManager.getTest().log(Status.SKIP, "Test Skipped");
     }
 
-    @Override
-    public void onTestFailedButWithinSuccessPercentage(ITestResult iTestResult) {
-        Log.info("Test failed but it is in defined success ratio " + getTestMethodName(iTestResult));
+    public void onTestFailedButWithinSuccessPercentage(ITestResult result) {
+        System.out.println("*** Test failed but within percentage % " + result.getMethod().getMethodName());
     }
+
+    public void onTestFailedWithTimeout(ITestResult result) throws AssertionError{
+
+        System.out.println("*** Test execution " + result.getMethod().getMethodName() + " failed...");
+        ExtentTestManager.getTest().log(Status.FAIL, "Test Failed");
+    }
+
 }

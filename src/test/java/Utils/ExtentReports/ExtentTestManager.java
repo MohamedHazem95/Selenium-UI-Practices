@@ -5,23 +5,12 @@ import com.aventstack.extentreports.ExtentTest;
 import java.util.HashMap;
 import java.util.Map;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.aventstack.extentreports.ExtentReports;
-import com.aventstack.extentreports.ExtentTest;
-
 public class ExtentTestManager {
-    static Map<Integer, ExtentTest> extentTestMap = new HashMap<Integer, ExtentTest>();
-    static ExtentReports extent = ExtentManager.getInstance();
+    static Map<Integer, ExtentTest> extentTestMap = new HashMap<>();
+    static ExtentReports  extent = ExtentManager.getExtentReports();
 
     public static synchronized ExtentTest getTest() {
-        System.out.println(extentTestMap.get((int)(Thread.currentThread().getId())));
-        return (ExtentTest) extentTestMap.get((int) (long) (Thread.currentThread().getId()));
-    }
-
-    public static synchronized void endTest() {
-        extent.flush();
+        return extentTestMap.get((int) Thread.currentThread().getId());
     }
 
     public static synchronized ExtentTest startTest(String testName) {

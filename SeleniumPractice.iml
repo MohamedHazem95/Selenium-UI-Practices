@@ -103,9 +103,10 @@
     <orderEntry type="library" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:4.10" level="project" />
     <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-core:1.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.qameta.allure:allure-junit4:2.22.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.qameta.allure:allure-testng:2.22.0" level="project" />
     <orderEntry type="library" name="Maven: io.qameta.allure:allure-java-commons:2.22.0" level="project" />
     <orderEntry type="library" name="Maven: io.qameta.allure:allure-model:2.22.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.qameta.allure:allure-test-filter:2.22.0" level="project" />
     <orderEntry type="library" name="Maven: io.qameta.allure:allure-selenide:2.22.0" level="project" />
     <orderEntry type="library" name="Maven: com.codeborne:selenide:5.12.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-1.2-api:2.12.1" level="project" />
