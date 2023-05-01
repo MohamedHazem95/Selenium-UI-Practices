@@ -1,5 +1,9 @@
+package Tests;
+
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.Description;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import pages.HomePage;
 import pages.LoginPage;
@@ -8,6 +12,8 @@ import pages.SignupPage;
 import resources.JSONReader;
 
 import java.lang.reflect.Method;
+import io.qameta.allure.selenide.AllureSelenide;
+
 
 public class TC01_UserRegistrationTest extends TestBase{
 
@@ -21,11 +27,12 @@ public class TC01_UserRegistrationTest extends TestBase{
         password = JSONReader.readJSON(getTestClassName(),method.getName(),"password");
     }
     @Test
+    @Description("Verify that user can login successfully")
     public void verifySignInSuccessfully()
     {
-        new LoginPage(driver)
-                .signInAction(email , password)
-                .verifySuccessfulLogin();
+            new LoginPage(driver)
+                    .signInAction(email, password)
+                    .verifySuccessfulLogin();
     }
     @Test
     public void verifyThatUserCanRegisterSuccessfully() {
